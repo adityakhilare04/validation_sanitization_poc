@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("validation_sanitization_poc")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c6b9ca4d49dc47924b1e954ff4b92a04cfdaff53")]
 [assembly: System.Reflection.AssemblyProductAttribute("validation_sanitization_poc")]
 [assembly: System.Reflection.AssemblyTitleAttribute("validation_sanitization_poc")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
