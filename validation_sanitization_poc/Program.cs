@@ -24,7 +24,10 @@ if (app.Environment.IsDevelopment())
 }
 
 // Middlewares
+app.UseMiddleware<RequestValidationMiddleware>();
+app.UseMiddleware<RequestSanitizationMiddleware>();
 app.UseCookieAuthentication();
+app.UseMiddleware<ValidationExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
