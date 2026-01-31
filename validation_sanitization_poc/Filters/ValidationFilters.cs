@@ -108,3 +108,42 @@ public class RequireRoleAttribute : ActionFilterAttribute
         base.OnActionExecuting(context);
     }
 }
+
+
+
+public class RequireApiKeyAttribute : ActionFilterAttribute
+{
+    private const string API_KEY_HEADER = "X-API-Key";
+    private static readonly string[] VALID_API_KEYS = { "demo-key-123", "test-key-999", "admin-key-123" };
+
+    public override void OnActionExecuted(ActionExecutedContext context)
+    {
+        if (!context.HttpContext.Request.Headers.TryGetValue(API_KEY_HEADER, out var apiKey))
+        {
+            context.Result = new ObjectResult(new
+            {
+                Message = "API Key Required",
+                Error = $"Missing {API_KEY_HEADER} header"
+            })
+            {
+                StatusCode = StatusCodes.Status401Unauthorized
+            };
+            return;
+        }
+
+        if (!VALID_API_KEYS.Contains(apiKey.ToString(), StringComparer.OrdinalIgnoreCase))
+        {
+            context.Result = new ObjectResult(new
+            {
+                Message = "Invalid API Key",
+                Error = "Provided API Key is not valid."
+            })
+            {
+                StatusCode = StatusCodes.Status401Unauthorized
+            };
+            return;
+        }
+
+        base.OnActionExecuted(context);
+    }
+}
