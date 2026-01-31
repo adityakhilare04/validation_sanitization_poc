@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using validation_sanitization_poc.Filters;
 using validation_sanitization_poc.Models;
 
 namespace validation_sanitization_poc.Controllers;
@@ -101,6 +102,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("me")]
+    [RequireAuthentication]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult GetLoggedInUser()
     {
         var user = HttpContext.Items["AuthenticatedUser"] as AuthenticatedUser;
@@ -109,6 +112,70 @@ public class AuthController : ControllerBase
         {
             Success = true,
             User = user
+        });
+    }
+
+
+    [HttpGet("test-auth")]
+    [RequireAuthentication]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult TestAuthentication()
+    {
+        var user = HttpContext.Items["AuthenticatedUser"] as AuthenticatedUser;
+
+        return Ok(new
+        {
+            Message = "You are Authenticated",
+            User = user
+        });
+    }
+
+
+    [HttpGet("test-admin")]
+    [RequiresAdmin]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult TestAdmin()
+    {
+        var user = HttpContext.Items["AuthenticatedUser"] as AuthenticatedUser;
+
+        return Ok(new
+        {
+            Message = "You have admin role.",
+            User = user
+        });
+    }
+
+
+    [HttpGet("test-role")]
+    [RequireRole("Manager, Role")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult TestRole()
+    {
+        var user = HttpContext.Items["AuthenticatedUser"] as AuthenticatedUser;
+
+        return Ok(new
+        {
+            Message = "You have required role.",
+            User = user
+        });
+    }
+
+
+    [HttpGet("demo-user")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult GetDemoUsers()
+    {
+        var demoUsers = Users.Select(u => new
+        {
+            Username = u.Key,
+            Password = u.Value.Password,
+            Role = u.Value.Role
+        });
+
+        return Ok(new
+        {
+            Message = "Demo users for testing",
+            DemoUsers = demoUsers
         });
     }
 }
